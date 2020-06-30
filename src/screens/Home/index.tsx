@@ -1,23 +1,17 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  useWindowDimensions,
-} from 'react-native';
+import {SafeAreaView, View, Text, FlatList} from 'react-native';
+import {Button} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 
 import {setRandomDigits} from '../../redux/actions';
 import {IRootState} from '../../redux/store';
 import {randomDigitGenerator} from '../../utils';
+import styles from './styles';
 
 export default function Home() {
   const [isModalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  const {height} = useWindowDimensions();
   const {logs} = useSelector((state: IRootState) => state.random);
 
   const handleGenerate = () => {
@@ -35,41 +29,47 @@ export default function Home() {
   };
 
   const renderListItem = ({item}: {item: Number[]}) => (
-    <View style={{flex: 1, flexDirection: 'row'}}>
+    <View style={styles.listItemContainer}>
       {item.map((digit, index) => (
-        <Text key={`${digit}-${index}`} style={{flex: 1, textAlign: 'center'}}>
+        <Text key={`${digit}-${index}`} style={styles.listItemText}>
           {digit}
         </Text>
       ))}
     </View>
   );
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
         {logs[logs.length - 1].map((digit, index) => (
           <View key={index.toString()}>
-            <Text>{digit}</Text>
+            <Text style={styles.digit}>{digit}</Text>
           </View>
         ))}
       </View>
-      <View>
-        <TouchableOpacity onPress={handleGenerate}>
-          <Text>Generate</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleShowLogs}>
-          <Text>Show Log</Text>
-        </TouchableOpacity>
+      <View style={styles.footer}>
+        <Button
+          raised
+          type="outline"
+          title="Generate"
+          onPress={handleGenerate}
+        />
+        <Button
+          raised
+          type="outline"
+          title="Show Log"
+          onPress={handleShowLogs}
+        />
       </View>
       <Modal
         isVisible={isModalVisible}
         onBackdropPress={() => setModalVisible(false)}
-        style={{justifyContent: 'flex-end', margin: 0}}>
-        <View style={{backgroundColor: 'white', height: height / 3}}>
+        style={styles.modalContainer}>
+        <View style={styles.modalContent}>
           <FlatList<Number[]>
             data={logs}
             renderItem={renderListItem}
             keyExtractor={(item, index) => index.toString()}
-            style={{margin: 20}}
+            style={styles.listContainer}
           />
         </View>
       </Modal>
