@@ -3,6 +3,7 @@ import {SafeAreaView, View, Text, FlatList} from 'react-native';
 import {Button} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {setRandomDigits} from '../../redux/actions';
 import {IRootState} from '../../redux/store';
@@ -38,41 +39,49 @@ export default function Home() {
     </View>
   );
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {logs[logs.length - 1].map((digit, index) => (
-          <View key={index.toString()}>
-            <Text style={styles.digit}>{digit}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={styles.footer}>
-        <Button
-          raised
-          type="outline"
-          title="Generate"
-          onPress={handleGenerate}
-        />
-        <Button
-          raised
-          type="outline"
-          title="Show Log"
-          onPress={handleShowLogs}
-        />
-      </View>
-      <Modal
-        isVisible={isModalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <FlatList<Number[]>
-            data={logs}
-            renderItem={renderListItem}
-            keyExtractor={(item, index) => index.toString()}
-            style={styles.listContainer}
+    <LinearGradient
+      colors={['#1a1d1cdd', '#1a1d1c56']}
+      locations={[0.4, 1]}
+      start={{x: 0, y: 0}}
+      end={{x: 0, y: 1}}
+      style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          {logs[logs.length - 1].map((digit, index) => (
+            <View key={index.toString()}>
+              <Text style={styles.digit}>{digit}</Text>
+            </View>
+          ))}
+        </View>
+        <View style={styles.footer}>
+          <Button
+            type="solid"
+            title="Generate"
+            onPress={handleGenerate}
+            buttonStyle={styles.generateButton}
+            titleStyle={styles.generateButtonText}
+          />
+          <Button
+            type="clear"
+            title="Show Log"
+            onPress={handleShowLogs}
+            titleStyle={styles.showLogText}
           />
         </View>
-      </Modal>
-    </SafeAreaView>
+        <Modal
+          isVisible={isModalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+          style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <FlatList<Number[]>
+              data={logs}
+              renderItem={renderListItem}
+              keyExtractor={(item, index) => index.toString()}
+              style={styles.listContainer}
+            />
+          </View>
+        </Modal>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
